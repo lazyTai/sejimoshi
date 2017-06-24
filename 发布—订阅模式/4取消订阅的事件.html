@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>取消订阅的事件</title>
+</head>
+<body>
+<script>
+    var event = {
+        lisenList: {},
+        listen: function (key, fn) {
+            var self = this;
+            if (!self.lisenList[key]) {
+                self.lisenList[key] = []
+            }
+            self.lisenList[key].push(fn)
+        },
+        trigger: function () {
+            var self = this;
+            var key = Array.prototype.shift.call(arguments);
+            for (var i = 0, fnItem = null; fnItem = self.lisenList[key][i]; i++) {
+                fnItem.call(self, arguments[0])
+            }
+        },
+        remove: function (key, fn) {/*fn代表函数之间也能判断是否相等  ===  */
+            var self = this;
+            var fns = self.lisenList[key];
+            if (!fns) {
+                return false
+            }
+            /*倒叙查询的关键是 ====self.lisenList[key].length-1====*/
+            for (var i = self.lisenList[key].length-1, itemFn = null;
+                 itemFn = self.lisenList[key][i];
+                 i--) {
+                if (itemFn === fn) {
+                    /*删除*/
+                    self.lisenList[key].splice(i, 1)
+                }
+            }
+        }
+    }
+    var installEvent = function (obj) {
+        for (var key in event) {
+            obj[key] = event[key]
+        }
+    }
+
+    var a = {}
+    installEvent(a)
+
+    var callXiaoming = function (json) {
+        console.log(json)
+    }
+    var calltaitai = function (json) {
+        console.log(json)
+    }
+    a.listen("xiaoming", callXiaoming)
+    a.listen("taitai", calltaitai)
+
+
+    a.remove('xiaoming',callXiaoming)
+
+
+    a.trigger("xiaoming",{name:'xiaoming'})
+    a.trigger("taitai",{name:'taitai'})
+</script>
+</body>
+</html>
