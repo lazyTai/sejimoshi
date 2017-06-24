@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>虚拟代理实现图片预加载</title>
+</head>
+<body>
+<img src="" alt="" id="img">
+<script>
+    var myimg=(function () {
+        var imgNode=document.createElement('img')
+        document.body.appendChild(imgNode)
+        return {
+            setSrc:function (src) {
+                imgNode.src=src
+            }
+        }
+    })()
+//    myimg.setSrc('https://assets.jikexueyuan.com/user/avtar/201601/20/05/3u125rg0qx4ww.jpeg')
+    
+    var proxyImage=(function () {
+        return {
+            setSrc:function (src) {
+                myimg.setSrc("./404.png");
+
+                var img=new Image();
+                img.src=src;
+                img.onload=function () {
+                    myimg.setSrc(this.src)
+                }
+            }
+        }
+    })()
+    proxyImage.setSrc('https://assets.jikexueyuan.com/user/avtar/201601/20/05/3u125rg0qx4ww.jpeg')
+</script>
+</body>
+</html>
