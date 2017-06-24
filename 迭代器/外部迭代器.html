@@ -7,6 +7,83 @@
     <title>外部迭代器</title>
 </head>
 <body>
+<script>
+    /*
+     * lists1 lists2 比较2个数组相等，这么比？？写一个compare
+     * */
+    /* var each = function (lists, callback) {
+     for (var i = 0, item = null; item = lists[i]; i++) {
+     callback.call(item, item, i)
+     }
+     }
+     var compare = function (arry1, arry2) {
+     if(arry2.length!=arry1.length) throw new Error("no")
+     each(arry1, function (item1, i1) {
+     if(item1!=arry2[i1]) throw new Error("no")
+     })
+     console.log("yes")
+     }
 
+     //    compare([1,2,3],[1,2,3])
+     compare([1,2,3],[1,2])*/
+
+
+    /* 外部迭代器
+     *
+     * 怎么使用
+     * var iterator1=Iterator([1,2,3])
+     * while(iterator1.isDone()){
+     *   iterator1.getCurrentItem()
+     *   iterator1.next();
+     * }
+     *
+     * 所以
+     * 定义 Iterator 参数（array）
+     *方法：isDone getCurrentItem next
+     * 属性：currentItem
+     * */
+    var Iterator = function (array) {
+        var current = 0;
+        var isDone = function () {
+            return current>=array.length
+        }
+        var getCurrentItem = function () {
+            return array[current]
+        }
+        var next = function () {
+             current++;
+        }
+        var getIndex=function () {
+            return current
+        }
+        return {
+            isDone: isDone,
+            getCurrentItem: getCurrentItem,
+            next: next,
+            getIndex:getIndex
+
+        }
+    }
+    /*   var iterator=new Iterator([1,2,3])
+     while (!iterator.isDone()){
+     console.log(iterator.getCurrentItem())
+     console.log(iterator.getIndex())
+     iterator.next()
+     }*/
+    var compare=function (iterator1,iterator2) {
+        while (!iterator1.isDone()&&!iterator2.isDone()){
+            if(iterator1.getCurrentItem()!==iterator2.getCurrentItem())
+            {
+                throw new Error("no")
+            }
+            iterator1.next()
+            iterator2.next()
+        }
+        console.log('yes')
+    }
+    var iterator1=new Iterator([1,2,3])
+    var iterator2=new Iterator([2,1])
+    compare(iterator1,iterator2)
+</script>
 </body>
 </html>
