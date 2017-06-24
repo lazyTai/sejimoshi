@@ -1,0 +1,66 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> 使用策略模式实现缓动动画</title>
+</head>
+<body>
+<style>
+    body, html {
+        padding: 0;
+        margin: 0
+    }
+
+    #div {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        left: 0;
+        background: green
+    }
+</style>
+<div id="div"></div>
+<script>
+    var Animate = function (dom) {
+        this.dom = dom;
+        this.startPos = dom.offsetLeft;
+        this.cssPropertyName = null;
+        this.endPos = 0;
+        this.moveOffset=0;
+        this.duration = null;
+    }
+    Animate.prototype.start = function (cssName, endPos, duration) {
+        console.log('1===start===animate')
+        this.cssPropertyName = cssName;
+        this.endPos = endPos;
+        this.duration = duration;
+        var self = this;
+        var timeId = setInterval(function () {
+            if (self.step() === false) {
+                console.log("3====end===animation")
+                clearInterval(timeId)
+            }
+        }, 19)
+
+    }
+    Animate.prototype.step = function () {
+        if (this.endPos < this.moveOffset) {
+            this.update(this.endPos)
+            return false
+        }
+        this.moveOffset += 10;
+        this.update(this.moveOffset)
+    }
+    Animate.prototype.update = function (pos) {
+        console.log("2===update====animate")
+        this.dom.style[this.cssPropertyName] = pos + 'px'
+    }
+
+    var div = document.getElementById('div')
+    var animate = new Animate(div)
+    animate.start('left', 500, 100);
+</script>
+</body>
+</html>

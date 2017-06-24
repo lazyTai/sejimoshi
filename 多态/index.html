@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>多态</title>
+</head>
+<body>
+
+<script>
+    var googleMap={
+        show : function () {
+            console.log("gogole")
+        }
+    }
+    var baidumap={
+        show : function () {
+            console.log("百度")
+        }
+    }
+  /*  var renderMap=function(type){
+        if(type==='google'){
+            googleMap.show();
+        }
+        if(type==='baidu'){
+            baidumap.show();
+        }
+    }*/
+  var renderMap = function (map) {
+      if(map.show instanceof Function){
+          map.show()
+      }
+  }
+    renderMap(googleMap);
+    renderMap(baidumap)
+</script>
+</body>
+</html>

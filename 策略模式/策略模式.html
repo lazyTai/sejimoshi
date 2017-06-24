@@ -1,0 +1,76 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>策略模式</title>
+</head>
+<body>
+<script>
+    /* var calculateBonus=function (performanceLevel,salary) {
+     if(performanceLevel==='s'){
+     return salary*4
+     }
+     if(performanceLevel==='a'){
+     return salary*3
+     }
+     if(performanceLevel==='b'){
+     return salary*2
+     }
+     }
+     calculateBonus('s',200)*/
+    /*定义策略类  使用类的概念来消灭if else*/
+    /*var performanceS = function () {}
+    performanceS.prototype.calculate = function (salary) {
+        return salary * 4
+    }
+    var performanceB = function () {
+    }
+    performanceB.prototype.calculate = function (salary) {
+        return salary * 3
+    }
+    var performanceA = function () {
+    }
+    performanceA.prototype.calculate = function (salary) {
+        return salary * 2
+    }
+
+    var Bonus = function () {
+        this.salary = null;
+        this.strategy = null
+    }
+    Bonus.prototype.setSalary = function (salary) {
+        this.salary = salary;
+    }
+    Bonus.prototype.setStrategy = function (strategy) {
+        this.strategy = strategy;
+    }
+    Bonus.prototype.getBonus = function (strategy) {
+        return this.strategy.calculate(this.salary)
+    }
+
+    var b = new Bonus()
+    b.setStrategy(new performanceA())
+    b.setSalary(100)
+    console.log(b.getBonus())*/
+
+
+    var strategies={
+        "s":function (salary) {
+            return salary*4
+        },
+        "a":function (salary) {
+            return salary*3
+        },
+        "b":function (salary) {
+            return salary*2
+        }
+    }
+    var getBones=function (perfomer,salary) {
+       return  strategies[perfomer](salary)
+    }
+   console.log( getBones('s',100))
+</script>
+</body>
+</html>

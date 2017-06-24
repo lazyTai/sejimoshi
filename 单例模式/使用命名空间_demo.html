@@ -1,0 +1,31 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    var log = function (str) {
+        console.log(JSON.stringify(str))
+    }
+    var app = {};
+    app.namespace = function (str) {
+        var parts = str.split('.')
+        var current = app;
+        for (var i in parts) {
+            if (!current[parts[i]]) {
+                current[parts[i]] = {};
+            }
+            current = current[parts[i]];
+        }
+    }
+
+
+        app.namespace("event.style")
+        console.log(app)
+</script>
+</body>
+</html>

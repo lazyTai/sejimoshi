@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>apply</title>
+</head>
+<body>
+<script>
+    var fn=function () {
+        console.log("fn")
+    }
+//    var result=fn.apply(this);
+    /*延迟执行*/
+
+    var result=function () {
+        /*延迟执行*/
+        return fn.apply(this)
+    }
+    result()
+
+</script>
+
+</body>
+</html>
