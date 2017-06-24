@@ -1,0 +1,61 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3发布－订阅模式的通用实现</title>
+</head>
+<body>
+<script>
+    var event = {
+        lisenList: {},
+        listen: function (key, fn) {
+            var self = this;
+            if (!self.lisenList[key]) {
+                self.lisenList[key] = []
+            }
+            self.lisenList[key].push(fn)
+        },
+        trigger: function () {
+            var self = this;
+            var key = Array.prototype.shift.call(arguments);
+            for (var i = 0, fnItem = null; fnItem = self.lisenList[key][i]; i++) {
+                fnItem.call(self, arguments[0])
+            }
+        }
+    }
+    var installEvent = function (obj) {
+        for (var key in event) {
+            obj[key] = event[key]
+        }
+    }
+
+    var sallOffices = {}
+    /*售楼处*/
+    installEvent(sallOffices)
+    /*有了處理 listen + trigger 能力*/
+    sallOffices.listen('callxiaoming', function (json) {
+        console.log("小明接受订阅放回的东西，开始处理")
+        console.log(json)
+    })/*小明订阅，事情发生就叫小明（带上2个参数）*/
+
+
+    sallOffices.listen('calltaitai', function (json) {
+        console.log("tai接受订阅放回的东西，开始处理")
+        console.log(json)
+    })/*tai订阅，事情发生就叫小明*/
+
+
+    setTimeout(function () {
+        /*异步操作之后，事情结束，触发通知小明*/
+        sallOffices.trigger('callxiaoming',{name:"xiaoming",msg:"您看中的楼旁现在有空房，你要过来看嘛？"})
+    }, 1000)
+
+    setTimeout(function () {
+        /*异步操作之后，事情结束，触发通知小明*/
+        sallOffices.trigger('calltaitai',{name:"taitai",msg:"您看中的楼旁现在有空房，你要过来看嘛？"})
+    }, 2000)
+</script>
+</body>
+</html>

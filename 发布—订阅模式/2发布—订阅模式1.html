@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>发布—订阅模式</title>
+</head>
+<body>
+<script>
+    /*发布－订阅模式的作用
+     *   异步编程中
+     *   DOM 事件
+     *   自定义事件
+     *   使用
+     *   多个 a.listen("key",fn)
+     *   a.trigger("key",参数) 把fn试用
+     *   如何实现这件事情
+     *
+     * 对象a
+     * 属性cache存放队列fn
+     * 方法listen把参数fn放进cache中
+     * 方法trigger遍历cache，并调用每一个fn
+     *
+     * */
+
+    var a = {}
+    a.cache = {};
+    a.listen = function (key, fn) {
+        if (!this.cache[key]) {
+            this.cache[key] = []
+        }
+        this.cache[key].push(fn)
+    }
+    a.trigger = function () {
+        var key = arguments[0];/*得到 key 之后从argment中移除，为了剩下的argment都是需要的参数*/
+        Array.prototype.shift.call(arguments)
+        var arg = arguments;
+        var self = this;
+        for (var i = 0, itemFn = null; i < this.cache[key].length; i++) {
+            itemFn = self.cache[key][i];
+            itemFn.apply(self, arg)
+        }
+    }
+    a.listen("xiaomingListen",function (name,price) {
+        console.log("告诉"+name)
+        console.log("价格"+price)
+    })
+    a.listen("taitaiListen",function (name,price) {
+        console.log("告诉"+name)
+        console.log("价格"+price)
+    })
+
+    a.trigger('xiaomingListen','xiaoming',1000)
+    a.trigger('taitaiListen','taitai',10)
+
+</script>
+</body>
+</html>

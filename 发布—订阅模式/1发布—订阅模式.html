@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>发布—订阅模式</title>
+</head>
+<body>
+<script>
+    /*发布－订阅模式的作用
+     *   异步编程中
+     *   DOM 事件
+     *   自定义事件
+     *   使用
+     *   多个 a.listen(fn)
+     *   a.trigger() 把fn试用
+     *   如何实现这件事情
+     *
+     * 对象a
+     * 属性cache存放队列fn
+     * 方法listen把参数fn放进cache中
+     * 方法trigger遍历cache，并调用每一个fn
+     *
+     * */
+
+    var a = {}
+    a.cache = [];
+    a.listen = function (fn) {
+        this.cache.push(fn)
+    }
+    a.trigger = function () {
+        var self = this;
+        for (var i = 0, itemFn = null; i < this.cache.length; i++) {
+            itemFn = self.cache[i];
+            itemFn.apply(self, arguments)
+        }
+    }
+    a.listen(function (pp, ppp) {
+        console.log("1===>"+pp, ppp)
+    })
+    a.listen(function (pp, ppp) {
+        console.log("2===>"+pp, ppp)
+    })
+    a.trigger(1,2)
+    a.trigger(2,3)
+</script>
+</body>
+</html>
