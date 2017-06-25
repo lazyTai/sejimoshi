@@ -1,0 +1,42 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>中介者模式的例子——泡泡堂游戏 </title>
+</head>
+<body>
+<script>
+    /*比喻：中间的人来操作繁琐的事情
+     * 对方2个就不用理会对方是谁，反正我就和中间的人留言就好
+     *
+     *
+     * 玩家3个方法
+     * win lose die
+     * die比较特殊，die的时候，触发自己的lose和对方的win
+     * */
+    var Player = function (name) {
+        this.name = name;
+        this.enemy = null;
+    }
+    Player.prototype.win = function () {
+        console.log(this.name + "===>win")
+    }
+    Player.prototype.lose = function () {
+        console.log(this.name + "===>lose")
+    }
+    Player.prototype.die = function () {
+        this.lose()
+        this.enemy.win()
+    }
+
+    var p1 = new Player("p1")
+    var p2 = new Player("p2")
+    p1.enemy = p2;
+    p2.enemy = p1;
+
+    p1.die()
+</script>
+</body>
+</html>

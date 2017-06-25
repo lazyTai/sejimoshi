@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>职责链模式</title>
+</head>
+<body>
+<script>
+    /*
+     * 链表数据结构
+     * 类chain()
+     * 属性：内容，下一个
+     * 方法：设置下一个，触发内容执行
+     * */
+    var Chain = function (fn) {
+        this.fn = fn;
+        this.next = null;
+    }
+    Chain.prototype.setNext = function (next) {
+        this.next = next;
+    }
+    Chain.prototype.triggerFn = function () {
+        /*触发方法，在触发next方法*/
+        var res = this.fn.apply(this, arguments)
+        if (res === 'tonext') {
+            if (this.next) {
+                return this.next.triggerFn.apply(this.next, arguments)
+            }
+        }
+        return "alldone"
+    }
+
+
+    var a1 = function () {
+        console.log('a1')
+        return 'tonext'
+    }
+    var a3 = function () {
+        console.log("a3");
+        return "tonext"
+    }
+    var a2 = function () {
+        console.log('a2')
+        return 'tonext'
+    }
+    var a1Chain = new Chain(a1);
+    var a2Chain = new Chain(a2);
+    var a3Chain = new Chain(a3);
+    a1Chain.setNext(a3Chain)
+    a3Chain.setNext(a2Chain)
+
+    console.log(a1Chain.triggerFn())
+</script>
+</body>
+</html>

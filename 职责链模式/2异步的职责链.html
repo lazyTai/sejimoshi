@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> 异步的职责链</title>
+</head>
+<body>
+
+<script>
+    /*
+     * 如果异步
+     * 我们看看triggerFn有什么问题
+     * triggerFn=function(){
+     * if(ret==="tonext"){  //在根据ret的放回执行结果
+     this.next.triggerFn.apply(this.next,argument)
+     }
+     * }
+     *
+     * function(){
+     *   异步方法
+     * setTimeout(function(){
+     *
+     *   return 'tonext'
+     * },1000)
+     * }
+     *这就是问题，不能再一开始就放回 tonext所以下面的triggerfn不能被执行
+     * 所以需要我们手动的触发，添加next====》this.next.triggerFn.apply(this.next,argument)
+     * function next(){
+     *       this.next.triggerFn.apply(this.next,argument)
+     * }
+     * */
+
+    var Chain = function (fn) {
+        this.fn = fn;
+        this.nextReiver = null;
+    }
+    Chain.prototype.setNextReiver = function (nextReiver) {
+        this.nextReiver = nextReiver
+    }
+    Chain.prototype.triggerFn = function () {
+        var result = this.fn.apply(this,arguments)
+        /*想触发自己，在触发下面的方法*/
+        if (result == 'toNext') {
+            if (this.nextReiver) {
+                this.nextReiver.triggerFn.apply(this.nextReiver, arguments)
+            }
+        }
+    }
+    Chain.prototype.next = function () {
+        if (this.nextReiver) {
+            this.nextReiver.triggerFn.apply(this.nextReiver, arguments)
+        }
+    }
+
+    var a1 = function () {
+        console.log("a1 在处理中");
+        return 'toNext'
+    }
+    var a2 = function () {
+        console.log("a2 在处理中");
+        return 'toNext'
+    }
+
+    var a1Chain = new Chain(a1)
+    var a2Chain = new Chain(function () {
+        var self = this;
+        setTimeout(function () {
+            a2()
+            self.next();
+        }, 1000)
+
+    })
+    var a3Chain = new Chain(a1)
+
+
+    a1Chain.setNextReiver(a2Chain);
+    a2Chain.setNextReiver(a3Chain)
+
+    a1Chain.triggerFn()
+</script>
+</body>
+</html>
