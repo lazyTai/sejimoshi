@@ -1,0 +1,53 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>不喜欢这种污染原型的方式</title>
+</head>
+<body>
+
+<script>
+    /*最终看起来
+     * var a=before(a,beforeFn)
+     * a()
+     * */
+    /*
+     * 所以定于一个before方法
+     * 参数就是，原办法方法和前方法
+     * 返回原办法
+     * */
+    /* var before = function (fn, beforeFn) {
+     return function () {
+     beforeFn.apply(this, arguments)
+     return fn.apply(this, arguments)
+     }
+     }
+     var a = function (name) {
+     console.log(name)
+     return name
+     }
+     var a = before(a, function () {
+     console.log("before")
+     });
+     a(111)*/
+
+    var after = function (fn, afterFn) {
+        return function () {
+            var result = fn.apply(this, arguments)
+            afterFn.apply(this, arguments)
+            return result
+        }
+    }
+    var a = function (name) {
+        console.log(name)
+        return name
+    }
+    var a = after(a, function () {
+        console.log('after')
+    })
+    a("111")
+</script>
+</body>
+</html>
