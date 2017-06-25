@@ -1,0 +1,86 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>为游戏增加队伍</title>
+</head>
+<body>
+<script>
+    /*
+     * 不只是一个人对手的时候，就要有一个partners[]+enemies[]
+     * */
+    function Player(name, teamType) {
+        this.partners = [];
+        this.enimes = [];
+        this.state = 'live';
+        this.name = name;
+        this.teamType = teamType
+    }
+    Player.prototype.win = function () {
+        console.log(this.name + '===>win')
+    }
+    Player.prototype.lose = function () {
+        console.log(this.name + '===>lose')
+    }
+    Player.prototype.die = function () {
+        /*判断所有自己人都die 就对方all  win  我们all lose
+         * 如果自己人没有all die 通知自己lose
+         * */
+
+        var all_dead = true;
+        this.state = 'dead'
+        this.lose();
+        for (var i = 0, playPartner = null; playPartner = this.partners[i]; i++) {
+            if (playPartner.state != 'dead') {
+                all_dead = false;
+                /*只要有一个活着，队伍就没输*/
+                break;
+            }
+        }
+        if (all_dead) {
+            for (var i = 0, playPartner = null; playPartner = this.partners[i]; i++) {
+                playPartner.lose()
+            }
+            for (var i = 0, playE = null; playE = this.enimes[i]; i++) {
+                playE.win()
+            }
+        }
+    }
+
+    /*最后定义一个工厂来创建玩家：*/
+    var createFactory = (function () {
+        var players = [];
+        return function (name, teamType) {
+            var newPlayer = new Player(name, teamType);
+
+            for (var i = 0, playerItem = null; playerItem = players[i]; i++) {
+                if (playerItem.teamType === newPlayer.teamType) {
+                    playerItem.partners.push(newPlayer)
+                } else {
+                    playerItem.enimes.push(newPlayer)
+                }
+            }
+
+            players.push(newPlayer)
+
+            return newPlayer
+        }
+
+    })()
+
+    var q1 = createFactory('q1', 'red');
+    var q2 = createFactory('q2', 'red');
+    var q3 = createFactory('q3', 'red')
+
+    var q4 = createFactory('q4', 'blue');
+    var q5 = createFactory('q5', 'blue');
+    var q6 = createFactory('q6', 'blue')
+
+    q1.die()
+    q2.die()
+    q3.die()
+</script>
+</body>
+</html>
